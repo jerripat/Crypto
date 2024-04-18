@@ -3,6 +3,7 @@ from tkinter import *
 import Portfolio
 import sqlite3
 import matplotlib.pyplot as plt
+
 stocks = []  # Initialize stocks as a list
 
 root = ttk.Window(themename="superhero")
@@ -22,6 +23,7 @@ comboCoins = [
     'Polkadot:DOT'
 ]
 
+
 def insertData(stock):
     """
     Insert stock data into the 'stocks' table in the database.
@@ -35,9 +37,11 @@ def insertData(stock):
     #cursor.execute('DROP TABLE IF EXISTS stocks')  # Drop the table if it already exists
     cursor.execute('''CREATE TABLE IF NOT EXISTS stocks
                     (name TEXT, symbol TEXT, price REAL)''')  # Create the table if it doesn't exist
-    cursor.execute("INSERT INTO stocks VALUES (?, ?, ?)", (stock['name'], stock['symbol'], stock['price']))  # Insert individual stock
+    cursor.execute("INSERT INTO stocks VALUES (?, ?, ?)",
+                   (stock['name'], stock['symbol'], stock['price']))  # Insert individual stock
     conn.commit()
     cursor.close()
+
 
 def set_dict(nme, sym, cur):
     global stocks
@@ -51,6 +55,7 @@ def set_dict(nme, sym, cur):
     for stock in stocks:
         print(stock['name'], stock['symbol'], stock['price'])
 
+
 def get_symbol(e):
     selected_index = crptoCombobox.current()
     selected_item = comboCoins[selected_index]
@@ -60,6 +65,7 @@ def get_symbol(e):
     quote = Portfolio.fetch_quote(symbol)
     dataText.insert(END, f"{name}: {symbol} - {quote}\n")  # Display name, symbol, and quote in the Text widget
     insertData({'name': name, 'symbol': symbol, 'price': quote})  # Insert individual stock
+
 
 crptoCombobox = ttk.Combobox(root, bootstyle="success", values=comboCoins, state="readonly")
 crptoCombobox.pack(padx=10, pady=30)
@@ -83,6 +89,7 @@ def fetch_prices():
     prices = cursor.fetchall()  # fetch all prices
     conn.close()
     return [price[0] for price in prices]  # Extract prices from list of tuples
+
 
 # Fetch data from the database
 prices_data = fetch_prices()
